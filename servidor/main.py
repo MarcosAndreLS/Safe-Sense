@@ -12,25 +12,25 @@ from datetime import datetime
 # Configuração do servidor
 HOST = '0.0.0.0'
 PORT = 5000
-ALARM_ACTIVE = False
-IMAGES_DIR = 'intrusos'
-ALARM_SOUND = "Ze.mp3"
+ALARME_ATIVO = False
+DIRETORIO_IMAGENS = 'intrusos'
+SOM_ALARME = "Ze.mp3"
 
-if not os.path.exists(IMAGES_DIR):
-    os.makedirs(IMAGES_DIR)
+if not os.path.exists(DIRETORIO_IMAGENS):
+    os.makedirs(DIRETORIO_IMAGENS)
 
 # Inicializa o mixer do pygame
 pygame.mixer.init()
 
 def tocar_alarme():
-    pygame.mixer.music.load(ALARM_SOUND)
+    pygame.mixer.music.load(SOM_ALARME)
     pygame.mixer.music.play(-1)  # Reproduz em loop infinito
 
 def parar_alarme():
     pygame.mixer.music.stop()
 
 def tratar_conexao_cliente(conn, addr):
-    global ALARM_ACTIVE
+    global ALARME_ATIVO
     print(f'Conexão recebida de {addr}')
     with conn:
         buffer = ""
@@ -47,7 +47,7 @@ def tratar_conexao_cliente(conn, addr):
                     msg_json = json.loads(msg)
                     if msg_json.get('type') == 'alert':
                         print('Alerta recebido! Ativando alarme...')
-                        ALARM_ACTIVE = True
+                        ALARME_ATIVO = True
                         status_alarme()
                     elif msg_json.get('type') == 'image':
                         salvar_imagem(msg_json['image_data'])
@@ -56,7 +56,7 @@ def tratar_conexao_cliente(conn, addr):
 
 def salvar_imagem(base64_string):
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    image_path = os.path.join(IMAGES_DIR, f'intruso_{timestamp}.jpg')
+    image_path = os.path.join(DIRETORIO_IMAGENS, f'intruso_{timestamp}.jpg')
     image_data = base64.b64decode(base64_string)
     with open(image_path, 'wb') as f:
         f.write(image_data)
@@ -72,7 +72,7 @@ def exibir_imagem(image_path, timestamp):
     timestamp_label.config(text=f'Detectado em: {timestamp}')
 
 def status_alarme():
-    if ALARM_ACTIVE:
+    if ALARME_ATIVO:
         alarm_label.config(text='🔴 ALARME ATIVO', foreground='red')
         tocar_alarme()
     else:
@@ -80,12 +80,12 @@ def status_alarme():
         parar_alarme()
 
 def desativar_alarme():
-    global ALARM_ACTIVE
-    ALARM_ACTIVE = False
+    global ALARME_ATIVO
+    ALARME_ATIVO = False
     status_alarme()
     print('Alarme desativado')
 
-def start_server():
+def ligar_servidor():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, PORT))
     server.listen(5)
@@ -128,6 +128,6 @@ timestamp_label = ttk.Label(frame, text='', font=('Arial', 10), background='#222
 timestamp_label.pack()
 
 # Iniciar servidor em uma thread separada
-threading.Thread(target=start_server, daemon=True).start()
+threading.Thread(target=ligar_servidor, daemon=True).start()
 
 root.mainloop()
