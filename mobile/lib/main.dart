@@ -11,60 +11,60 @@ late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
-  runApp(AppSeguranca());
+  runApp(SecurityApp());
 }
 
-class AppSeguranca extends StatelessWidget {
+class SecurityApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Modo de Segurança',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: TelaSeguranca(),
+      home: SecurityScreen(),
     );
   }
 }
 
-class TelaSeguranca extends StatefulWidget {
+class SecurityScreen extends StatefulWidget {
   @override
-  _EstadoTelaSeguranca createState() => _EstadoTelaSeguranca();
+  _SecurityScreenState createState() => _SecurityScreenState();
 }
 
-class _EstadoTelaSeguranca extends State<TelaSeguranca> {
-  bool modoSegurancaAtivo = false;
-  Socket? soquete;
-  StreamSubscription<dynamic>? _assinaturaSensorProximidade;
-  CameraController? _controladorCamera;
-  bool cameraInicializada = false;
+class _SecurityScreenState extends State<SecurityScreen> {
+  bool isSecurityActive = false;
+  Socket? socket;
+  StreamSubscription<dynamic>? _proximitySubscription;
+  CameraController? _cameraController;
+  bool isCameraInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _inicializarSoquete();
-    _inicializarSensor();
+    _initializeSocket();
+    _initializeSensor();
   }
 
-  void _inicializarSoquete() async {
+  void _initializeSocket() async {
     try {
-      soquete = await Socket.connect('192.168.18.103', 5000);
+      socket = await Socket.connect('192.168.18.103', 5000);
       print('Conectado ao servidor TCP');
     } catch (e) {
       print('Erro ao conectar: $e');
     }
   }
 
-  void _inicializarSensor() {
-    _assinaturaSensorProximidade = ProximitySensor.events.listen((int evento) async {
-      bool estaPerto = evento == 1;
-      if (modoSegurancaAtivo && estaPerto) {
-        await _enviarAlertaECapturar();
+  void _initializeSensor() {
+    _proximitySubscription = ProximitySensor.events.listen((int event) async {
+      bool isNear = event == 1;
+      if (isSecurityActive && isNear) {
+        await _sendAlertAndCapture();
       }
     });
   }
 
-  Future<void> _inicializarCamera() async {
-    if (_controladorCamera != null && _controladorCamera!.value.isInitialized) {
+  Future<void> _initializeCamera() async {
+    if (_cameraController != null && _cameraController!.value.isInitialized) {
       return;
     }
 
@@ -75,14 +75,14 @@ class _EstadoTelaSeguranca extends State<TelaSeguranca> {
     }
 
     try {
-      CameraDescription cameraFrontal = cameras.firstWhere(
+      CameraDescription frontCamera = cameras.firstWhere(
               (camera) => camera.lensDirection == CameraLensDirection.front);
 
-      _controladorCamera = CameraController(cameraFrontal, ResolutionPreset.medium);
+      _cameraController = CameraController(frontCamera, ResolutionPreset.medium);
 
-      await _controladorCamera!.initialize();
+      await _cameraController!.initialize();
       setState(() {
-        cameraInicializada = true;
+        isCameraInitialized = true;
       });
 
       print("Câmera inicializada.");
@@ -91,43 +91,43 @@ class _EstadoTelaSeguranca extends State<TelaSeguranca> {
     }
   }
 
-  Future<void> _desligarCamera() async {
-    if (_controladorCamera != null) {
-      await _controladorCamera!.dispose();
-      _controladorCamera = null;
+  Future<void> _disposeCamera() async {
+    if (_cameraController != null) {
+      await _cameraController!.dispose();
+      _cameraController = null;
       setState(() {
-        cameraInicializada = false;
+        isCameraInitialized = false;
       });
       print("Câmera desligada.");
     }
   }
 
-  Future<void> _enviarAlertaECapturar() async {
-    if (soquete != null) {
-      await _capturarEEnviarImagem();
-      soquete!.write(jsonEncode({'tipo': 'alerta', 'mensagem': 'Intrusão detectada'}) + '\n');
+  Future<void> _sendAlertAndCapture() async {
+    if (socket != null) {
+      await _captureAndSendImage();
+      socket!.write(jsonEncode({'type': 'alert', 'message': 'Intrusão detectada'}) + '\n');
     }
   }
 
-  Future<void> _capturarEEnviarImagem() async {
-    await _inicializarCamera();
+  Future<void> _captureAndSendImage() async {
+    await _initializeCamera();
 
-    if (_controladorCamera == null || !_controladorCamera!.value.isInitialized) {
+    if (_cameraController == null || !_cameraController!.value.isInitialized) {
       print("Câmera não inicializada corretamente!");
       return;
     }
 
     try {
-      XFile imagem = await _controladorCamera!.takePicture();
-      print("Imagem capturada: ${imagem.path}");
+      XFile image = await _cameraController!.takePicture();
+      print("Imagem capturada: ${image.path}");
 
-      File arquivo = File(imagem.path);
-      List<int> bytesImagem = await arquivo.readAsBytes();
-      String imagemBase64 = base64Encode(bytesImagem);
+      File file = File(image.path);
+      List<int> imageBytes = await file.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
 
-      if (soquete != null) {
-        soquete!.write(jsonEncode({'tipo': 'imagem', 'dados_imagem': imagemBase64}) + '\n');
-        await _desligarCamera();
+      if (socket != null) {
+        socket!.write(jsonEncode({'type': 'image', 'image_data': base64Image}) + '\n');
+        await _disposeCamera();
       }
     } catch (e) {
       print("Erro ao capturar imagem: $e");
@@ -136,9 +136,9 @@ class _EstadoTelaSeguranca extends State<TelaSeguranca> {
 
   @override
   void dispose() {
-    _assinaturaSensorProximidade?.cancel();
-    soquete?.destroy();
-    _desligarCamera();
+    _proximitySubscription?.cancel();
+    socket?.destroy();
+    _disposeCamera();
     super.dispose();
   }
 
@@ -150,22 +150,22 @@ class _EstadoTelaSeguranca extends State<TelaSeguranca> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Modo de Segurança: ${modoSegurancaAtivo ? "Ativado" : "Desativado"}'),
+            Text('Modo de Segurança: ${isSecurityActive ? "Ativado" : "Desativado"}'),
             Switch(
-              value: modoSegurancaAtivo,
-              onChanged: (valor) async {
+              value: isSecurityActive,
+              onChanged: (value) async {
                 setState(() {
-                  modoSegurancaAtivo = valor;
+                  isSecurityActive = value;
                 });
 
-                /*if (modoSegurancaAtivo) {
-                  await _inicializarCamera();
+                /*if (isSecurityActive) {
+                  await _initializeCamera();
                 } else {
-                  await _desligarCamera();
+                  await _disposeCamera();
                 }*/
               },
             ),
-            cameraInicializada
+            isCameraInitialized
                 ? Text("Câmera pronta para capturas.")
                 : Text("Câmera não inicializada."),
           ],
