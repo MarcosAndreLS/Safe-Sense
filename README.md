@@ -72,3 +72,6 @@ Safe-Sense/
     |       |--- Ze.mp3
     |--- README.md
 ```
+
+## Capturas de tela do aplicativo, do servidor e das imagens capturadas
+
