@@ -44,7 +44,22 @@ Siga estas etapas para executar o projeto em sua máquina local:
     flutter pub get
     ```
 
-4. **Execute o aplicativo**
+4. **Navegue para a pasta do servidor**
+    ```bash
+    cd ..
+    cd servidor
+    ```
+
+5. **Execute o arquivo do servidor**
+    ```bash
+    python main.py
+    ```
+6. **Navegue novamente para a pasta mobile**
+    ```bash
+    cd ..
+    cd mobile
+    ```
+7. **Execute o aplicativo**
     ```bash
     flutter run
     ```
