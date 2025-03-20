@@ -99,15 +99,15 @@ Safe-Sense/
 
     Quando o servidor recebe uma imagem do aplicativo Android, ele mostra imediatamente na interface do servidor com data e horário real. Além disso, a imagem é salva automaticamente em uma pasta.
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 1" width="350"/>
+    <img src="https://github.com/user-attachments/assets/fbb4168c-20f6-47c7-b3b5-27cb5526cd30" alt="Imagem do Intruso 1" width="350"/>
 </p>
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 2" width="350"/>
+    <img src="https://github.com/user-attachments/assets/a8bebc35-22d8-4f3b-adaf-7b4922e27a59" alt="Imagem do Intruso 2" width="350"/>
 </p>
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 3" width="350"/>
+    <img src="https://github.com/user-attachments/assets/d45f84a7-6654-4244-8f55-520a6ca39566" alt="Imagem do Intruso 3" width="350"/>
 </p>
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 4" width="350"/>
+    <img src="https://github.com/user-attachments/assets/a2a4c1b2-9415-469f-bcce-93a502a6873d" alt="Imagem do Intruso 4" width="350"/>
 </p>
