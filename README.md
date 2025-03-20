@@ -33,33 +33,37 @@ Siga estas etapas para executar o projeto em sua máquina local:
     ```bash
     git clone https://github.com/MarcosAndreLS/Safe-Sense.git
     ```
-
 2. **Navegue para dentro da pasta**
     ```bash
     cd Safe-Sense
     ```
 
-3. **Instale as dependências**
+3. **Instale as dependências do Python**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. **Instale as dependências do flutter**
     ```bash
     flutter pub get
     ```
 
-4. **Navegue para a pasta do servidor**
+5. **Navegue para a pasta do servidor**
     ```bash
     cd ..
     cd servidor
     ```
 
-5. **Execute o arquivo do servidor**
+6. **Execute o arquivo do servidor**
     ```bash
     python main.py
     ```
-6. **Navegue novamente para a pasta mobile**
+7. **Navegue novamente para a pasta mobile**
     ```bash
     cd ..
     cd mobile
     ```
-7. **Execute o aplicativo**
+8. **Execute o aplicativo**
     ```bash
     flutter run
     ```
@@ -86,6 +90,7 @@ Safe-Sense/
     |       |--- main.py
     |       |--- Ze.mp3
     |--- README.md
+    |--- requirements.txt
 ```
 
 ## Capturas de tela do aplicativo, do servidor e das imagens capturadas
