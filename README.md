@@ -77,7 +77,7 @@ Safe-Sense/
 
 1. **Tela do Aplicativo Mobile**
 
-   O Aplicativo Mobile possui um botão central para ativar e desativar o modo de segurança. A partir do momento em que o modo de segurança é ativado, o aplicativo emite a notificação de permissão para o uso da câmera do smartphone. Caso o sensor de movimento seja acionado, é enviado uma foto para o servidor ao qual o smartphone está conectado.
+   O aplicativo mobile conta com um botão central que permite ativar e desativar o modo de segurança. Ao ativar esse modo, o aplicativo solicita permissão para o uso da câmera do smartphone. Uma vez ativado, caso o sensor de movimento detecte atividade, o aplicativo captura uma foto e a envia automaticamente para o servidor ao qual está conectado.
 
 <p align="center">
     <img src="https://github.com/user-attachments/assets/e13be3b5-ca39-400e-a2d6-5799ade78a2d" alt="Imagem da Tela Inicial do Aplicativo Mobile" width="350"/>
@@ -89,10 +89,25 @@ Safe-Sense/
 
 2. **Tela do Servidor**
 
-    O servidor fica em espera enquanto o smartphone não recebe movimento no sensor de movimento dele. Quando o servidor recebe o sinal de que teve movimento, ele aciona um alarme e é possível desativar o mesmo por um botão próprio no servidor.
+   O servidor permanece em espera enquanto o smartphone não detecta movimento pelo sensor de proximidade. Quando um movimento é identificado, o smartphone envia um sinal ao servidor, que imediatamente aciona um alarme sonoro como medida de segurança. O alarme pode ser desativado manualmente através de um botão na interface do servidor. Além disso, o smartphone captura uma imagem do evento e a envia ao servidor, onde é automaticamente armazenada em uma pasta chamada "intrusos".
     
 <p align="center">
     <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem da Tela do Servidor" width="350"/>
 </p>
 
 3. **Algumas Imagens Capturadas**
+
+    Quando o servidor recebe uma imagem do aplicativo Android, ele mostra imediatamente na interface do servidor com data e horário real. Além disso, a imagem é salva automaticamente em uma pasta.
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 1" width="350"/>
+</p>
+
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 2" width="350"/>
+</p>
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 3" width="350"/>
+</p>
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/22876cce-c87c-4c9c-bbbb-f4b1fd01910c" alt="Imagem do Intruso 4" width="350"/>
+</p>
